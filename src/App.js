@@ -1,25 +1,54 @@
-import logo from './logo.svg';
+import data from "./data"
 import './App.css';
+import { useState } from "react";
+
+
+import React, { useEffect } from 'react';
 
 function App() {
+  const [trans, setTrans] = useState(0);
+  const [currentImg, setCurrentImg] = useState(0);
+  let timeout;
+
+  const changeImageHandler = (currentImage) => {
+    const newTranslate = currentImage * 100;
+    setTrans(newTranslate);
+  };
+
+  useEffect(() => {
+    timeout = setTimeout(() => {
+      if (currentImg + 1 < data.length) {
+        setCurrentImg((prev) => prev + 1);
+      } else {
+        setCurrentImg(0);
+      }
+      changeImageHandler(currentImg);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, [currentImg]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <section className="App-header">
+        {data.map((dat, index) => (
+          <div key={index}>
+      
+            <img
+              src={dat.img}
+              alt="data not found"
+              className="image"
+              style={{ transform: `translate(-${trans}vw)` }}
+            />
+            
+          </div>
+          
+        ))}
+      </section>
+     
     </div>
   );
 }
 
 export default App;
+
